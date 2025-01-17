@@ -5,20 +5,16 @@ import matter from 'gray-matter';
 import { remark } from 'remark';
 import html from 'remark-html';
 
-// Define the type for blog post params
-export type BlogPostParams = {
-  params: {
-    slug: string;
-  };
-};
+// Define params type as a Promise
+type Params = Promise<{ slug: string[] }>;
 
 // Generate static params for blog posts
-export async function generateStaticParams(): Promise<BlogPostParams['params'][]> {
+export async function generateStaticParams() {
   const postsDirectory = path.join(process.cwd(), 'src/posts');
   const fileNames = fs.readdirSync(postsDirectory);
 
   return fileNames.map((fileName) => ({
-    slug: fileName.replace(/\.md$/, '')
+    slug: [fileName.replace(/\.md$/, '')]
   }));
 }
 
@@ -49,8 +45,9 @@ async function getBlogPostData(slug: string) {
 }
 
 // Generate metadata for the blog post
-export async function generateMetadata({ params }: BlogPostParams): Promise<Metadata> {
-  const postData = await getBlogPostData(params.slug);
+export async function generateMetadata({ params }: { params: { slug: string[] } }): Promise<Metadata> {
+  const slug = params.slug[0];
+  const postData = await getBlogPostData(slug);
   
   return {
     title: postData?.title || 'Blog Post',
@@ -59,8 +56,12 @@ export async function generateMetadata({ params }: BlogPostParams): Promise<Meta
 }
 
 // Blog Post Page Component
-export default async function BlogPost({ params }: BlogPostParams) {
-  const postData = await getBlogPostData(params.slug);
+export default async function BlogPost({ params }: { params: Params }) {
+  // Await the params
+  const { slug } = await params;
+  
+  // Use the first element of the slug array
+  const postData = await getBlogPostData(slug[0]);
 
   if (!postData) {
     return <div>Blog post not found</div>;
