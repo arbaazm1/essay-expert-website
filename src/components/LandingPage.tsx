@@ -1,3 +1,4 @@
+"use client";
 import React, { useState, useEffect } from 'react';
 import { Calendar, Edit, GraduationCap, BookOpen, Clock, Star, X, Menu, FileText } from 'lucide-react';
 import { Card, CardHeader, CardTitle, CardContent } from '@/components/ui/card';
@@ -44,6 +45,7 @@ const LogoTicker = () => {
         </style>
         <div className="ticker-container">
           <div className="ticker-wrapper">
+            {/* First set of logos */}
             {universityLogos.map((logo, index) => (
               <div
                 key={`first-${index}`}
@@ -55,6 +57,7 @@ const LogoTicker = () => {
                 </span>
               </div>
             ))}
+            {/* Second set of logos for seamless loop */}
             {universityLogos.map((logo, index) => (
               <div
                 key={`second-${index}`}
@@ -73,7 +76,7 @@ const LogoTicker = () => {
   );
 };
 
-// Navigation Component
+// Responsive Navigation Component
 const Navigation = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   
@@ -89,10 +92,12 @@ const Navigation = () => {
     <nav className="bg-white shadow-sm fixed w-full z-50">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex justify-between h-16">
+          {/* Logo/Brand */}
           <div className="flex items-center">
             <span className="text-xl font-semibold text-gray-900">Essay Expert</span>
           </div>
 
+          {/* Desktop Navigation */}
           <div className="hidden md:flex items-center space-x-8">
             <a 
               onClick={() => handleNavigation('services')}
@@ -120,6 +125,7 @@ const Navigation = () => {
             </a>
           </div>
 
+          {/* Mobile Menu Button */}
           <div className="md:hidden flex items-center">
             <button
               onClick={() => setIsMenuOpen(!isMenuOpen)}
@@ -131,27 +137,30 @@ const Navigation = () => {
         </div>
       </div>
 
-      <div className={`md:hidden ${isMenuOpen ? 'block' : 'hidden'}`}>
+      {/* Mobile Menu */}
+      <div 
+        className={`md:hidden ${isMenuOpen ? 'block' : 'hidden'}`}
+      >
         <div className="px-2 pt-2 pb-3 space-y-1 sm:px-3 bg-white shadow-lg">
-          
+          <a
             onClick={() => handleNavigation('services')}
             className="block px-3 py-2 text-gray-600 hover:text-gray-900 hover:bg-gray-50 cursor-pointer"
           >
             Services
           </a>
-          
+          <a
             onClick={() => handleNavigation('testimonials')}
             className="block px-3 py-2 text-gray-600 hover:text-gray-900 hover:bg-gray-50 cursor-pointer"
           >
             Success Stories
           </a>
-          
+          <a
             onClick={() => handleNavigation('calendar')}
             className="block px-3 py-2 text-gray-600 hover:text-gray-900 hover:bg-gray-50 cursor-pointer"
           >
             Book Consultation
           </a>
-          
+          <a
             href="/blog"
             className="block px-3 py-2 text-gray-600 hover:text-gray-900 hover:bg-gray-50"
           >
@@ -160,6 +169,72 @@ const Navigation = () => {
         </div>
       </div>
     </nav>
+  );
+};
+
+// Blog Component
+const Blog = () => {
+  const blogPosts = [
+    {
+      id: 1,
+      title: "5 Tips for Writing a Compelling Personal Statement",
+      date: "2025-01-05",
+      excerpt: "Learn the key strategies that make your personal statement stand out from the crowd...",
+      readingTime: "5 min read",
+      category: "Personal Statements"
+    },
+    {
+      id: 2,
+      title: "Common Medical School Essay Mistakes to Avoid",
+      date: "2025-01-03",
+      excerpt: "Discover the pitfalls that many medical school applicants face when writing their essays...",
+      readingTime: "4 min read",
+      category: "Medical School"
+    },
+    {
+      id: 3,
+      title: "How to Tell Your Story Effectively in Grad School Essays",
+      date: "2025-01-01",
+      excerpt: "Master the art of narrative writing for your graduate school applications...",
+      readingTime: "6 min read",
+      category: "Graduate School"
+    }
+  ];
+
+  return (
+    <div className="max-w-4xl mx-auto px-4 py-12">
+      <h1 className="text-3xl font-bold text-gray-900 mb-8">Admissions Essay Advice</h1>
+      <div className="space-y-8">
+        {blogPosts.map((post) => (
+          <Card key={post.id} className="hover:shadow-lg transition-shadow">
+            <CardContent className="p-6">
+              <div className="flex justify-between items-start mb-4">
+                <div>
+                  <p className="text-sm text-blue-600 mb-2">{post.category}</p>
+                  <h2 className="text-xl font-semibold text-gray-900 mb-2">
+                    {post.title}
+                  </h2>
+                </div>
+                <span className="text-sm text-gray-500">{post.readingTime}</span>
+              </div>
+              <p className="text-gray-600 mb-4">{post.excerpt}</p>
+              <div className="flex justify-between items-center">
+                <span className="text-sm text-gray-500">
+                  {new Date(post.date).toLocaleDateString('en-US', {
+                    year: 'numeric',
+                    month: 'long',
+                    day: 'numeric'
+                  })}
+                </span>
+                <button className="text-blue-600 hover:text-blue-800 font-medium">
+                  Read More →
+                </button>
+              </div>
+            </CardContent>
+          </Card>
+        ))}
+      </div>
+    </div>
   );
 };
 
@@ -187,7 +262,7 @@ const CalendlyEmbed = () => {
 };
 
 // Main Landing Page Component
-export const LandingPage = () => {
+const LandingPage = () => {
   const services = [
     {
       title: "Undergraduate Admissions",
@@ -228,7 +303,7 @@ export const LandingPage = () => {
     <div className="min-h-screen bg-gray-50">
       <Navigation />
       
-      {/* Hero Section */}
+      {/* Hero Section - adjusted for fixed navbar */}
       <div className="bg-white pt-16">
         <div className="max-w-7xl mx-auto px-4 py-16 sm:px-6 lg:px-8">
           <div className="text-center">
@@ -307,3 +382,5 @@ export const LandingPage = () => {
     </div>
   );
 };
+
+export default LandingPage;
