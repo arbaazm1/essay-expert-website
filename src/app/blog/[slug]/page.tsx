@@ -1,86 +1,52 @@
-import { Metadata, ResolvingMetadata } from 'next';
-import fs from 'fs';
-import path from 'path';
-import matter from 'gray-matter';
+import { getAllPostSlugs, getPostData } from '@/lib/posts';
 import { remark } from 'remark';
 import html from 'remark-html';
+import { Metadata } from 'next'; // Import Metadata
 
-// Correct Params type
-type Params = { slug: string[] };
-
-// Generate static params for blog posts
-export async function generateStaticParams(): Promise<Params[]> {
-  const postsDirectory = path.join(process.cwd(), 'src/posts');
-  const fileNames = fs.readdirSync(postsDirectory);
-
-  return fileNames.map((fileName) => ({
-    slug: [fileName.replace(/\.md$/, '')]
+export async function generateStaticParams() {
+  const paths = getAllPostSlugs();
+  return paths.map((path) => ({
+    slug: path.slug, // No need for .params
   }));
 }
 
-// Function to get blog post data
-async function getBlogPostData(slug: string) {
-  const postsDirectory = path.join(process.cwd(), 'src/posts');
-  const fullPath = path.join(postsDirectory, `${slug}.md`);
-  
-  try {
-    const fileContents = fs.readFileSync(fullPath, 'utf8');
-    const matterResult = matter(fileContents);
+// Type for the expected params structure
+type Params = {
+  slug: string;
+};
 
-    // Use remark to convert markdown into HTML string
-    const processedContent = await remark()
-      .use(html)
-      .process(matterResult.content);
-    const contentHtml = processedContent.toString();
-
-    return {
-      slug,
-      html: contentHtml,
-      ...matterResult.data
-    };
-  } catch (error) {
-    console.error('Error reading blog post:', error);
-    return null;
-  }
+// Type for the page props
+interface PageProps {
+  params: Params;
 }
 
-// Generate metadata for the blog post
-export async function generateMetadata({ params }: { params: Params }, parent: ResolvingMetadata): Promise<Metadata> {
-  const slug = params.slug[0];
-  const postData = await getBlogPostData(slug);
-  
+export async function generateMetadata({ params }: PageProps): Promise<Metadata> {
+  const post = getPostData(params.slug);
+
   return {
-    title: postData?.title || 'Blog Post',
-    description: postData?.excerpt || 'Blog post details'
+    title: post.title,
+    description: post.excerpt, // Add description for better SEO
   };
 }
 
-// Blog Post Page Component
-export default async function BlogPost({ params }: { params: Params }) {
-  // No need to await params here
-  const { slug } = params; 
-  
-  // Use the first element of the slug array
-  const postData = await getBlogPostData(slug[0]);
-
-  if (!postData) {
-    return <div>Blog post not found</div>;
-  }
+export default async function Post({ params }: PageProps) {
+  const post = getPostData(params.slug);
+  const processedContent = await remark()
+    .use(html)
+    .process(post.content);
+  const contentHtml = processedContent.toString();
 
   return (
-    <div className="max-w-2xl mx-auto py-16 px-4">
-      <article>
-        <h1 className="text-4xl font-bold mb-4">{postData.title}</h1>
-        <div className="text-gray-600 mb-6">
-          {postData.date && (
-            <p>Published on {new Date(postData.date).toLocaleDateString()}</p>
-          )}
-        </div>
-        <div 
-          className="prose lg:prose-xl"
-          dangerouslySetInnerHTML={{ __html: postData.html }} 
-        />
-      </article>
-    </div>
+    <article className="max-w-4xl mx-auto px-4 py-12">
+      <h1 className="text-4xl font-bold mb-4">{post.title}</h1>
+      <div className="flex justify-between items-center mb-8 text-gray-600">
+        <span>{post.category}</span>
+        <span>{new Date(post.date).toLocaleDateString()}</span>
+      </div>
+      <div 
+        className="prose lg:prose-xl"
+        dangerouslySetInnerHTML={{ __html: contentHtml }} 
+      />
+    </article>
   );
 }
