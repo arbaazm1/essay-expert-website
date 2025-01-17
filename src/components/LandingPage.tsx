@@ -305,6 +305,8 @@ const LandingPage = () => {
   return (
     <div className="min-h-screen bg-gray-50 relative">
       <Navigation handleNavigation={handleNavigation} />
+
+      <main>
       
       {/* Hero Section - adjusted for fixed navbar */}
       <div className="bg-white pt-16">
@@ -382,6 +384,7 @@ const LandingPage = () => {
 
       {/* Calendly Section */}
       <CalendlyEmbed />
+      </main>
     </div>
   );
 };
