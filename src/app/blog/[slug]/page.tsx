@@ -1,16 +1,19 @@
+import { Metadata } from 'next';
 import fs from 'fs';
 import path from 'path';
 import matter from 'gray-matter';
 import { remark } from 'remark';
 import html from 'remark-html';
 
-// Dynamic segment parameters type
-export interface Params {
-  slug: string;
-}
+// Define the type for blog post params
+export type BlogPostParams = {
+  params: {
+    slug: string;
+  };
+};
 
-// Function to get all possible blog post slugs
-export async function generateStaticParams(): Promise<Params[]> {
+// Generate static params for blog posts
+export async function generateStaticParams(): Promise<BlogPostParams['params'][]> {
   const postsDirectory = path.join(process.cwd(), 'src/posts');
   const fileNames = fs.readdirSync(postsDirectory);
 
@@ -45,12 +48,18 @@ async function getBlogPostData(slug: string) {
   }
 }
 
+// Generate metadata for the blog post
+export async function generateMetadata({ params }: BlogPostParams): Promise<Metadata> {
+  const postData = await getBlogPostData(params.slug);
+  
+  return {
+    title: postData?.title || 'Blog Post',
+    description: postData?.excerpt || 'Blog post details'
+  };
+}
+
 // Blog Post Page Component
-export default async function BlogPost({
-  params
-}: {
-  params: Params;
-}) {
+export default async function BlogPost({ params }: BlogPostParams) {
   const postData = await getBlogPostData(params.slug);
 
   if (!postData) {
