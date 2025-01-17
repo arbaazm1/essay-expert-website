@@ -5,14 +5,12 @@ import { remark } from 'remark';
 import html from 'remark-html';
 
 // Dynamic segment parameters type
-type Params = {
-  params: {
-    slug: string
-  }
+export interface Params {
+  slug: string;
 }
 
 // Function to get all possible blog post slugs
-export async function generateStaticParams() {
+export async function generateStaticParams(): Promise<Params[]> {
   const postsDirectory = path.join(process.cwd(), 'src/posts');
   const fileNames = fs.readdirSync(postsDirectory);
 
@@ -48,7 +46,11 @@ async function getBlogPostData(slug: string) {
 }
 
 // Blog Post Page Component
-export default async function BlogPost({ params }: Params) {
+export default async function BlogPost({
+  params
+}: {
+  params: Params;
+}) {
   const postData = await getBlogPostData(params.slug);
 
   if (!postData) {
