@@ -17,7 +17,7 @@ const LogoTicker = () => {
   ];
 
   return (
-    <div className="w-full bg-gray-100 py-8">
+    <div className="w-full bg-gray-50 py-8"> {/* Changed to bg-gray-50 */}
       <div className="relative overflow-hidden">
         <style>
           {`
@@ -49,7 +49,7 @@ const LogoTicker = () => {
             {universityLogos.map((logo, index) => (
               <div
                 key={`first-${index}`}
-                className="inline-flex items-center justify-center w-24 h-24 rounded shadow-md mx-6"
+                className="inline-flex items-center justify-center w-20 h-20 rounded shadow-md mx-3" {/* Adjusted spacing & sizes*/}
                 style={{ backgroundColor: logo.color }}
               >
                 <span className="text-white font-bold text-sm px-2 text-center">
@@ -61,7 +61,7 @@ const LogoTicker = () => {
             {universityLogos.map((logo, index) => (
               <div
                 key={`second-${index}`}
-                className="inline-flex items-center justify-center w-24 h-24 rounded shadow-md mx-6"
+                className="inline-flex items-center justify-center w-20 h-20 rounded shadow-md mx-3" {/* Adjusted spacing & sizes */}
                 style={{ backgroundColor: logo.color }}
               >
                 <span className="text-white font-bold text-sm px-2 text-center">
@@ -76,7 +76,7 @@ const LogoTicker = () => {
   );
 };
 
-// Navigation Component
+// Responsive Navigation Component
 interface NavigationProps {
   handleNavigation: (section: string) => void;
 }
@@ -87,12 +87,12 @@ const Navigation: React.FC<NavigationProps> = ({ handleNavigation }) => {
   return (
     <nav className="bg-white shadow-sm fixed w-full z-50 top-0">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="flex justify-between h-16">
+        <div className="flex justify-between h-16 items-center"> {/* Centered items */}
           {/* Logo/Brand */}
-          <div className="flex items-center">
+          <div className="flex-1 flex justify-center"> {/* Centered */}
             <span className="text-xl font-semibold text-gray-900">Essay Expert</span>
           </div>
-
+          
           {/* Desktop Navigation */}
           <div className="hidden md:flex items-center space-x-8">
             <a 
@@ -107,7 +107,7 @@ const Navigation: React.FC<NavigationProps> = ({ handleNavigation }) => {
             >
               Success Stories
             </a>
-            <a 
+             <a
               onClick={() => handleNavigation('calendar')}
               className="text-gray-600 hover:text-gray-900 cursor-pointer"
             >
@@ -135,22 +135,22 @@ const Navigation: React.FC<NavigationProps> = ({ handleNavigation }) => {
 
       {/* Mobile Menu */}
       <div 
-        className={`md:hidden ${isMenuOpen ? 'block' : 'hidden'} absolute`}
+         className={`md:hidden ${isMenuOpen ? 'block' : 'hidden'} absolute top-16 right-0 w-full bg-white shadow-lg`}
       >
-        <div className="px-2 pt-2 pb-3 space-y-1 sm:px-3 bg-white shadow-lg">
+        <div className="px-2 pt-2 pb-3 space-y-1 sm:px-3">
           <a
             onClick={() => handleNavigation('services')}
             className="block px-3 py-2 text-gray-600 hover:text-gray-900 hover:bg-gray-50 cursor-pointer"
           >
             Services
           </a>
-          <a
+           <a
             onClick={() => handleNavigation('testimonials')}
             className="block px-3 py-2 text-gray-600 hover:text-gray-900 hover:bg-gray-50 cursor-pointer"
           >
             Success Stories
           </a>
-          <a
+            <a
             onClick={() => handleNavigation('calendar')}
             className="block px-3 py-2 text-gray-600 hover:text-gray-900 hover:bg-gray-50 cursor-pointer"
           >
@@ -307,11 +307,9 @@ const LandingPage = () => {
       <Navigation handleNavigation={handleNavigation} />
 
       <main>
-      
-      {/* Hero Section - adjusted for fixed navbar */}
-      <div className="bg-white pt-16">
-        <div className="max-w-7xl mx-auto px-4 py-16 sm:px-6 lg:px-8">
-          <div className="text-center">
+        {/* Hero Section - adjusted for fixed navbar */}
+        <div className="bg-white pt-24 pb-16"> {/* Added more padding */}
+          <div className="max-w-7xl mx-auto px-4 py-4 sm:px-6 lg:px-8 text-center"> {/* Aligned center */}
             <h1 className="text-4xl font-bold text-gray-900 sm:text-5xl">
               Expert Admissions Essay Editing
             </h1>
@@ -319,74 +317,71 @@ const LandingPage = () => {
               Transform your application essays with professional guidance
             </p>
             <div className="mt-8">
-              <button 
+            <button
                 onClick={() => handleNavigation('calendar')}
-                className="bg-blue-600 text-white px-6 py-3 rounded-lg text-lg font-medium hover:bg-blue-700"
+                className="bg-blue-600 text-white px-6 py-3 rounded-md text-lg font-medium hover:bg-blue-700"
               >
-                Book Free Consultation
-              </button>
+              Book Free Consultation
+             </button>
             </div>
           </div>
         </div>
-      </div>
 
-      {/* Logo Ticker */}
-      <LogoTicker />
+        {/* Logo Ticker */}
+        <LogoTicker />
 
-      {/* Services Section */}
-      <div id="services" className="max-w-7xl mx-auto px-4 py-16 sm:px-6 lg:px-8">
-        <div className="text-center mb-12">
-          <h2 className="text-3xl font-bold text-gray-900">Our Services</h2>
-        </div>
-        <div className="grid grid-cols-1 gap-8 md:grid-cols-3">
-          {services.map((service) => (
-            <Card key={service.title} className="hover:shadow-lg transition-shadow">
-              <CardHeader>
-                <div className="w-12 h-12 mx-auto mb-4">
-                  <service.icon className="w-full h-full text-blue-600" />
-                </div>
-                <CardTitle className="text-center">{service.title}</CardTitle>
-              </CardHeader>
-              <CardContent>
-                <p className="text-gray-600 text-center">{service.description}</p>
-              </CardContent>
-            </Card>
-          ))}
-        </div>
-      </div>
-
-      {/* Testimonials Section */}
-      <div id="testimonials" className="bg-gray-100 py-16">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <h2 className="text-3xl font-bold text-center text-gray-900 mb-12">
-            Success Stories
-          </h2>
+        {/* Services Section */}
+        <div id="services" className="max-w-7xl mx-auto px-4 py-16 sm:px-6 lg:px-8">
+          <div className="text-center mb-12"> {/* Added more bottom margin */}
+            <h2 className="text-3xl font-bold text-gray-900">Our Services</h2>
+          </div>
           <div className="grid grid-cols-1 gap-8 md:grid-cols-3">
-            {testimonials.map((testimonial, index) => (
-              <Card key={index} className="bg-white">
-                <CardContent className="pt-6">
-                  <div className="flex mb-4">
-                    {[...Array(5)].map((_, i) => (
-                      <Star key={i} className="w-5 h-5 text-yellow-400 fill-current" />
-                    ))}
+            {services.map((service) => (
+              <Card key={service.title} className="hover:shadow-lg transition-shadow">
+                <CardHeader>
+                  <div className="w-12 h-12 mx-auto mb-4">
+                    <service.icon className="w-full h-full text-blue-600" />
                   </div>
-                  <p className="text-gray-600 mb-4 italic">"{testimonial.text}"</p>
-                  <div className="text-sm">
-                    <p className="font-bold text-gray-900">{testimonial.author}</p>
-                    <p className="text-blue-600">{testimonial.school}</p>
-                  </div>
+                   <CardTitle className="text-center">{service.title}</CardTitle>
+                </CardHeader>
+                <CardContent className="text-center"> {/* Aligned Content */}
+                  <p className="text-gray-600 ">{service.description}</p> {/* Aligned Content */}
                 </CardContent>
               </Card>
             ))}
           </div>
         </div>
-      </div>
 
-      {/* Calendly Section */}
-      <CalendlyEmbed />
+        {/* Testimonials Section */}
+        <div id="testimonials" className="bg-gray-100 py-16"> {/* changed background */}
+          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <h2 className="text-3xl font-bold text-center text-gray-900 mb-12">
+              Success Stories
+            </h2>
+            <div className="grid grid-cols-1 gap-8 md:grid-cols-3">
+              {testimonials.map((testimonial, index) => (
+                <Card key={index} className="bg-white">
+                  <CardContent className="pt-6 text-center"> {/* Aligned Content */}
+                    <div className="flex justify-center mb-4"> {/* Centered stars */}
+                      {[...Array(5)].map((_, i) => (
+                        <Star key={i} className="w-5 h-5 text-yellow-400 fill-current" />
+                      ))}
+                    </div>
+                    <p className="text-gray-600 mb-4 italic font-bold text-lg">"{testimonial.text}"</p> {/* changed quote text */}
+                    <div className="text-sm">
+                      <p className="font-bold text-gray-900">{testimonial.author}</p>
+                      <p className="text-blue-600">{testimonial.school}</p>
+                    </div>
+                  </CardContent>
+                </Card>
+              ))}
+            </div>
+          </div>
+        </div>
+
+        {/* Calendly Section */}
+        <CalendlyEmbed />
       </main>
     </div>
   );
 };
-
-export default LandingPage;
