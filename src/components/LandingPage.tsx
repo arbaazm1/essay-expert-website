@@ -76,17 +76,13 @@ const LogoTicker = () => {
   );
 };
 
-// Responsive Navigation Component
-const Navigation = () => {
+// Navigation Component
+interface NavigationProps {
+  handleNavigation: (section: string) => void;
+}
+
+const Navigation: React.FC<NavigationProps> = ({ handleNavigation }) => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
-  
-  const handleNavigation = (section) => {
-    setIsMenuOpen(false);
-    const element = document.getElementById(section);
-    if (element) {
-      element.scrollIntoView({ behavior: 'smooth' });
-    }
-  };
 
   return (
     <nav className="bg-white shadow-sm fixed w-full z-50">
@@ -298,10 +294,17 @@ const LandingPage = () => {
       school: "Harvard Law School"
     }
   ];
+  
+  const handleNavigation = (section: string) => {
+    const element = document.getElementById(section);
+    if (element) {
+      element.scrollIntoView({ behavior: 'smooth' });
+    }
+  };
 
   return (
     <div className="min-h-screen bg-gray-50">
-      <Navigation />
+      <Navigation handleNavigation={handleNavigation} />
       
       {/* Hero Section - adjusted for fixed navbar */}
       <div className="bg-white pt-16">
@@ -315,7 +318,7 @@ const LandingPage = () => {
             </p>
             <div className="mt-8">
               <button 
-                onClick={() => document.getElementById('calendar').scrollIntoView({ behavior: 'smooth' })}
+                onClick={() => handleNavigation('calendar')}
                 className="bg-blue-600 text-white px-6 py-3 rounded-lg text-lg font-medium hover:bg-blue-700"
               >
                 Book Free Consultation
