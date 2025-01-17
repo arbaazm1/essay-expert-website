@@ -85,7 +85,7 @@ const Navigation: React.FC<NavigationProps> = ({ handleNavigation }) => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
 
   return (
-    <nav className="bg-white shadow-sm fixed w-full z-50">
+    <nav className="bg-white shadow-sm fixed w-full z-50 top-0">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex justify-between h-16">
           {/* Logo/Brand */}
@@ -135,7 +135,7 @@ const Navigation: React.FC<NavigationProps> = ({ handleNavigation }) => {
 
       {/* Mobile Menu */}
       <div 
-        className={`md:hidden ${isMenuOpen ? 'block' : 'hidden'}`}
+        className={`md:hidden ${isMenuOpen ? 'block' : 'hidden'} absolute`}
       >
         <div className="px-2 pt-2 pb-3 space-y-1 sm:px-3 bg-white shadow-lg">
           <a
@@ -250,7 +250,7 @@ const CalendlyEmbed = () => {
   return (
     <div id="calendar" className="h-screen pt-16">
       <div 
-        className="calendly-inline-widget w-full h-full"
+        className="calendly-inline-widget w-full h-full max-w-3xl mx-auto"
         data-url="https://calendly.com/YOUR_USERNAME/15min"
       />
     </div>
@@ -303,7 +303,7 @@ const LandingPage = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gray-50">
+    <div className="min-h-screen bg-gray-50 relative">
       <Navigation handleNavigation={handleNavigation} />
       
       {/* Hero Section - adjusted for fixed navbar */}
