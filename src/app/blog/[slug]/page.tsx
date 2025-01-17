@@ -1,15 +1,15 @@
-import { Metadata } from 'next';
+import { Metadata, ResolvingMetadata } from 'next';
 import fs from 'fs';
 import path from 'path';
 import matter from 'gray-matter';
 import { remark } from 'remark';
 import html from 'remark-html';
 
-// Define params type as a Promise
-type Params = Promise<{ slug: string[] }>;
+// Correct Params type
+type Params = { slug: string[] };
 
 // Generate static params for blog posts
-export async function generateStaticParams() {
+export async function generateStaticParams(): Promise<Params[]> {
   const postsDirectory = path.join(process.cwd(), 'src/posts');
   const fileNames = fs.readdirSync(postsDirectory);
 
@@ -45,7 +45,7 @@ async function getBlogPostData(slug: string) {
 }
 
 // Generate metadata for the blog post
-export async function generateMetadata({ params }: { params: { slug: string[] } }): Promise<Metadata> {
+export async function generateMetadata({ params }: { params: Params }, parent: ResolvingMetadata): Promise<Metadata> {
   const slug = params.slug[0];
   const postData = await getBlogPostData(slug);
   
@@ -57,8 +57,8 @@ export async function generateMetadata({ params }: { params: { slug: string[] } 
 
 // Blog Post Page Component
 export default async function BlogPost({ params }: { params: Params }) {
-  // Await the params
-  const { slug } = await params;
+  // No need to await params here
+  const { slug } = params; 
   
   // Use the first element of the slug array
   const postData = await getBlogPostData(slug[0]);
